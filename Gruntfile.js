@@ -2,8 +2,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    concat: {
-    },
 
     mochaTest: {
       test: {
@@ -21,23 +19,45 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      dist: {
+        src: [
+            'public/lib/*.js',
+        ],
+        dest: 'public/dist/lib.min.js'
+      },
+      dist2: {
+        src: [
+            'public/client/*.js',
+        ],
+        dest: 'public/dist/client.min.js'
+      },
+
+    },
+
+    cssmin: {
+      dist: {
+        src: [
+            'public/style.css'
+        ],
+        dest: 'public/dist/style.min.css'
+      }
     },
 
     jshint: {
       files: [
-        // Add filespec list here
+        'app/**/*.js',
+        'lib/*.js',
+        'public/client/*.js',
+        'index.js',
+        'server.js'
       ],
       options: {
-        force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
           'public/dist/**/*.js'
         ]
       }
-    },
-
-    cssmin: {
     },
 
     watch: {
@@ -89,12 +109,10 @@ module.exports = function(grunt) {
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
-  grunt.registerTask('test', [
-    'mochaTest'
-  ]);
+  grunt.registerTask('test', ['mochaTest']);
 
-  grunt.registerTask('build', [
-  ]);
+  grunt.registerTask('build', []);
+
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
@@ -106,6 +124,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
     // add your deploy tasks here
+    'jshint',
+    'test',
+    'uglify',
+    'cssmin'
   ]);
 
 
