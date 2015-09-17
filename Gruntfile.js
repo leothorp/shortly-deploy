@@ -14,14 +14,17 @@ module.exports = function(grunt) {
 
     nodemon: {
       dev: {
-        script: 'server.js'
+        script: 'index.js'
       }
     },
 
     uglify: {
       dist: {
         src: [
-            'public/lib/*.js',
+            'public/lib/jquery.js',
+            'public/lib/underscore.js',
+            'public/lib/backbone.js',
+            'public/lib/handlebars.js'
         ],
         dest: 'public/dist/lib.min.js'
       },
@@ -31,7 +34,6 @@ module.exports = function(grunt) {
         ],
         dest: 'public/dist/client.min.js'
       },
-
     },
 
     cssmin: {
@@ -67,7 +69,6 @@ module.exports = function(grunt) {
           'public/lib/**/*.js',
         ],
         tasks: [
-          'concat',
           'uglify'
         ]
       },
@@ -79,6 +80,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push heroku master'
       }
     },
   });
@@ -113,16 +115,18 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', []);
 
-
-  grunt.registerTask('upload', function(n) {
+  grunt.registerTask('deploy', function(n) {
     if(grunt.option('prod')) {
-      // add your production server task here
+      grunt.task.run([ 'shell' ]);
     } else {
-      grunt.task.run([ 'server-dev' ]);
+      grunt.task.run([ 'runTasks', 'server-dev']);
     }
   });
 
-  grunt.registerTask('deploy', [
+  grunt.registerTask('heroku:production', 'runTasks');
+  grunt.registerTask('heroku:development', '');
+
+  grunt.registerTask('runTasks', [
     // add your deploy tasks here
     'jshint',
     'test',
