@@ -1,8 +1,17 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
+    //lets us access version numbers, other info
     pkg: grunt.file.readJSON('package.json'),
-
+    // concat : {
+    //   options{
+    //     separator: ';'
+    //   },
+    //   dist: {
+    //     src: ['public/client/**/*.js'],
+    //     dest: 'public/dist/<% pkg.name %>.js'
+    //   }
+    // }
     mochaTest: {
       test: {
         options: {
@@ -117,12 +126,14 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', function(n) {
     if(grunt.option('prod')) {
-      grunt.task.run([ 'shell' ]);
+      grunt.task.run([ 'shell:prodServer' ]);
     } else {
       grunt.task.run([ 'runTasks', 'server-dev']);
+      //grunt.task.run(['server-dev']);
     }
   });
 
+//could use postinstall in our package.json instead
   grunt.registerTask('heroku:production', 'runTasks');
   grunt.registerTask('heroku:development', '');
 
